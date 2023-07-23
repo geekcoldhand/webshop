@@ -29,7 +29,7 @@ public String readersBooks(@ModelAttribute  String reader, Model model){
     return "readingList";
 }
 @PostMapping("/reader")
-public String addToReadingList(@ModelAttribute Model model, Book book){
+public String addToReadingList(@ModelAttribute @RequestParam String reader, Model model, Book book){
    ArrayList<String> formData = new ArrayList<>();
     try {
         if (book != null){
@@ -40,13 +40,12 @@ public String addToReadingList(@ModelAttribute Model model, Book book){
         }else {
             return "redirect not filled out entirely. form null";
         }
-    }catch (Error e){
-        System.out.checkError();
-
-        return "Error in PostMapping" + e;
+    }catch (Exception e){
+    model.addAttribute("error", e.getMessage());
+        return "errorPage";
     }
-   //book.setReader(readerParam);
+    book.setReader(reader);
     readingListRepo.save(book);
-    return "readingList";
+    return "errorPage";
 }
 }
